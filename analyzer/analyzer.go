@@ -5,7 +5,6 @@ import (
 	"flag"
 	"go/ast"
 	"go/printer"
-	"go/token"
 	"strings"
 
 	"golang.org/x/tools/go/analysis"
@@ -30,7 +29,11 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				return true
 			}
 
-			nodeStr := render(pass.Fset, be)
+            var buf bytes.Buffer
+            if err := printer.Fprint(&buf, pass.Fset, be); err != nil {
+                panic(err)
+            }
+            nodeStr := buf.String()
 			if !strings.HasPrefix(nodeStr, "panic(") {
 
 				return true
@@ -42,13 +45,4 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	}
 
 	return nil, nil
-}
-
-// render returns the pretty-print of the given node
-func render(fset *token.FileSet, x interface{}) string {
-	var buf bytes.Buffer
-	if err := printer.Fprint(&buf, fset, x); err != nil {
-		panic(err)
-	}
-	return buf.String()
 }
