@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/malteehrlen/adams/analyzer"
+	"github.com/malteehrlen/adams"
 	"golang.org/x/tools/go/analysis/singlechecker"
 )
 
 func main() {
-	singlechecker.Main(analyzer.NewAnalyzer())
+	singlechecker.Main(adams.NewAnalyzer())
 }
